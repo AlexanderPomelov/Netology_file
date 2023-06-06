@@ -18,13 +18,18 @@ with open ('recipes.txt', 'rt', encoding='utf-8') as file:
     # res = json.dumps(cook_book, ensure_ascii=False, indent=2)   #Вывод через json
     # print(res)
 
-def get_shop_list_by_dishes(dishes, person_count):
-    ingredients = {}
-    for dish, ingredients_list in cook_book.items():
-        for in_name in ingredients_list:
-            if dish in dishes:
-                ingredients.update({in_name['ingredient_name']: {'quantity': int(in_name['quantity'])*person_count, 'measure': measure}})
-    return ingredients
+def get_shop_list_by_dishes(dishes, person_count, cook_book):
+    shop_list = {}
+    for dish in dishes:
+        if dish in cook_book:
+            for ingridient in cook_book[dish]:
+                new_shop_list_item = dict(ingridient)
+                new_shop_list_item['quantity'] = int(new_shop_list_item['quantity']) * person_count
+                if new_shop_list_item['ingredient_name'] not in shop_list:
+                    shop_list[new_shop_list_item['ingredient_name']] = new_shop_list_item
+                else:
+                    shop_list[new_shop_list_item['ingredient_name']]['quantity'] += new_shop_list_item['quantity']
+    return shop_list
 
-
-pprint(get_shop_list_by_dishes(['Омлет','Фахитос'], 1))
+res = json.dumps(get_shop_list_by_dishes(['Омлет','Фахитос'], 3, cook_book), ensure_ascii=False, indent=2)
+print(res)
