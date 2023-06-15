@@ -1,20 +1,27 @@
+import os
+import operator
+from operator import itemgetter
+from pprint import pprint
 
+list_text = []
+count_str = {}
+text = {}
+result = []
+for x in os.listdir(r'C:\Users\Admen\Desktop\Netology Homework\Homework_Files\Homework_3'):
+    if x.endswith('.txt'):
+        with open(x, 'rt', encoding='utf-8') as file:
+            list_text.append(x)
+            count_str[x] = file.read().count('\n')+1
+        with open(x, encoding='utf-8') as f:
+            text[x] = f.read()
+sort_count_str = {}
+sort_key = sorted(count_str, key=count_str.get)
 
-with open('1.txt', 'rt', encoding='utf-8') as file_1, open('2.txt', 'rt', encoding='utf-8') as file_2,\
-        open('3.txt', 'rt', encoding='utf-8') as file_3:
+for i in sort_key:
+    sort_count_str[i] = count_str[i]
+for num_text in sort_count_str.keys():
+    result.append(f'{num_text}\n{sort_count_str[num_text]}\n{text[num_text]}')
+result = '\n'.join(result)
 
-    count_str_1, count_str_2, count_str_3 = file_1.readlines(), file_2.readlines(), file_3.readlines()
-
-
-with open('result.txt', 'w' , encoding='utf-8') as result:
-    result.write('2.txt' '\n')
-    res_1, res_2, res_3 = len(count_str_2), len(count_str_1), len(count_str_3)
-    result.write(f'{str(res_1)} \n')
-    result.write(f'{"".join(count_str_2)} \n')
-    result.write('1.txt' '\n')
-    result.write(f'{str(res_2)} \n')
-    result.write(f'{"".join(count_str_1)} \n')
-    result.write('3.txt' '\n')
-    result.write(f'{str(res_3)} \n')
-    result.write(f'{"".join(count_str_3)} \n')
-
+with open('result.txt', 'w', encoding='utf-8') as f:
+    f.write(result)
